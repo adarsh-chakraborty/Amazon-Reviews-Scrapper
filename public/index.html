@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Amazon reviews scrapper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="relative">
+    <nav class="bg-[#0c0c0c]">
+      <span class="flex justify-center p-4 text-xl text-white"
+        >Amazon Reviews Scrapper</span
+      >
+    </nav>
+    <div
+      id="error"
+      class="hidden p-3 w-full justify-center text-lg bg-red-100 font-bold text-red-900"
+    >
+      Error occured!
+    </div>
+
+    <div class="flex flex-col items-center justify-center mt-14">
+      <div
+        class="flex flex-col items-center justify-items-center px-8"
+        id="logodiv"
+      >
+        <div
+          id="title"
+          class="text-2xl text-center font-bold text-stone-800 max-w-md"
+        ></div>
+        <img
+          id="logo"
+          src="/public/amazon.png"
+          class="max-w-sm"
+          alt="amazon logo"
+        />
+      </div>
+      <span
+        class="text-2xl py-2 border-b-2 border-slate-900 mb-4"
+        id="subheading"
+        >Reviews Scrapper</span
+      >
+      <div id="output"></div>
+      <form id="form" action="/product" method="post">
+        <input
+          class="border-gray-900 border rounded-sm px-4 py-2 shadow-lg text-gray-800"
+          type="text"
+          placeholder="Enter amazon url"
+          name="url"
+          id="url"
+          required
+        />
+        <button class="rounded-sm border-slate-900 border px-3 py-2">
+          Submit
+        </button>
+      </form>
+      <div class="text-sm text-stone-600 mt-4">
+        Enter a valid product url from amazon.in and submit.
+      </div>
+    </div>
+
+    <script>
+      let newlogo;
+      const logo = document.querySelector('#logo');
+      const logodiv = document.querySelector('#logodiv');
+
+      const title = document.querySelector('#title');
+      const form = document.querySelector('form');
+      const subheading = document.querySelector('#subheading');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        title.textContent = 'Fetching Product details from amazon...';
+        console.log(logo);
+        logo.remove();
+        newlogo = document.createElement('img');
+        newlogo.setAttribute('src', '/public/loader.svg');
+        logodiv.append(newlogo);
+        console.log('SUBMITTING...');
+
+        document.querySelectorAll('#output');
+
+        // FRONT END VALIDATION
+
+        // IF PASS
+        try {
+          const req = await fetch('/product', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url.value })
+          });
+
+          const product = await req.json();
+
+          newlogo.remove();
+          const productLogo = document.createElement('img');
+
+          productLogo.setAttribute('src', product.imageURL);
+          productLogo.setAttribute('alt', product.title);
+          logodiv.appendChild(productLogo);
+          title.textContent = product.title;
+          console.log(product);
+
+          subheading.textContent = `Scrapping in Progress...`;
+          const output = document.querySelector('#output');
+          const htmlContent = `<div class="flex flex-col justify-center items-center" id="waiting">
+            <span class="font-bold text-xl"
+              >Your download link will appear here..</span
+            >
+            <span class="text-sm text-gray-900 font-semibold"
+              >It can take a while to scrap all reviews depending upon number of
+              reviews...Be Patient!</span
+            >
+
+            <div id="result" class="flex flex-col items-center justify-center">
+              <img
+                id="logo"
+                src="/public/loader.svg"
+                class="max-w-sm"
+                alt="amazon logo"
+              />
+
+            </div>
+          </div>`;
+          const x = document.createElement('div');
+          x.innerHTML = htmlContent;
+          document.body.appendChild(x);
+          // send scrapping request
+          const req2 = await fetch('/postURL', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: url.value })
+          });
+
+          const resp2 = await req2.json();
+          console.log(resp2);
+
+          const result = document.querySelector('#result');
+          const t = document.createElement('span');
+          t.textContent = resp2.result;
+          output.appendChild(t);
+          if (result) {
+            result.innerHTML = `<a href="/reviews/${resp2.filename}" download><button
+                class="my-4 px-4 py-2 shadow-md font-semibold bg-[#f19a33] border border-black text-black"
+              >
+                Download .xlsx
+              </button>`;
+          }
+        } catch (e) {
+          console.log(e);
+          error.classList.remove('hidden');
+          error.classList.add('flex');
+          error.textContent = 'Request failed, please try again in some time!';
+          logo.src = '/public/amazon.png';
+          logo.alt = 'amazon logo';
+          title.textContent = '';
+          output.innerHtml = '';
+        }
+      });
+      /*
+          <div class="flex flex-col justify-center items-center" id="waiting">
+            <span class="font-bold text-xl"
+              >Your download link will appear here..</span
+            >
+            <span class="text-sm text-gray-900 font-semibold"
+              >It can take a while to scrap all reviews depending upon number of
+              reviews...Be Patient!</span
+            >
+
+            <div id="result" class="flex flex-col items-center justify-center">
+              <img
+                id="logo"
+                src="/public/loader.svg"
+                class="max-w-sm"
+                alt="amazon logo"
+              />
+              <button
+                class="my-4 px-4 py-2 shadow-md font-semibold bg-[#f19a33] border border-black text-black"
+              >
+                Download .xlsx
+              </button>
+            </div>
+          </div>
+      */
+    </script>
+  </body>
+</html>
