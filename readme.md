@@ -6,10 +6,10 @@ Amazon will block your ip address if you send multiple requets like a robot so w
 
 You can consider Soax or of you want free alternative you can look for those online. There are plenty of them available and only handful of them actually works.
 
-So I am going to use free proxy from webshare.io, they give 10 free proxies and 1 GB of bandwidth for free!
+So I am going to use free proxy from [webshare.io](https://www.webshare.io/), they give 10 free proxies and 1 GB of bandwidth for free!
 
 ### Step-1 
-Create an account on webshare.io` and get your username and password.
+Create an account on [webshare.io](https://www.webshare.io/) and get your username and password.
 
 ### Step-2
  Download (or copy) all the ip addresses and their respective ports that you've been given.
@@ -23,10 +23,15 @@ You will have to use your username and password, so either set it as Environment
 
 ![](https://i.postimg.cc/d35PXDWw/image.png)
 
-### Step 5 
+### Step 5
+Install necessary requirements using this command:
+```shell
+pip install -r requirements.txt
+```
+### Step 6
 You're almost there!! Just run the script by using the following command:
 ```shell
-uvicorn main:app --realod
+uvicorn main:app --reload
 ```
 
 then visit the local url to use the application.
