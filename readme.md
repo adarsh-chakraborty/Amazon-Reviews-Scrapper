@@ -23,12 +23,12 @@ You will have to use your username and password, so either set it as Environment
 
 ![](https://i.postimg.cc/d35PXDWw/image.png)
 
-###Step 5
+### Step 5
 Install necessary requirements using this command:
 ```shell
 pip install -r requirements.txt
 ```
-### Step 6 
+### Step 6
 You're almost there!! Just run the script by using the following command:
 ```shell
 uvicorn main:app --reload
