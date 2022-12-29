@@ -1,0 +1,7 @@
+beautifulsoup4==4.11.1
+fastapi==0.88.0
+pandas==1.5.2
+pydantic==1.10.2
+requests==2.28.1
+starlette==0.23.1
+uvicorn==0.20.0
